@@ -15,6 +15,10 @@ services:
       - "127.0.0.1:53:53/tcp"
       - "127.0.0.1:53:53/udp"
       - "127.0.0.1:80:80/tcp"
+      - "[::1]:53:53/tcp"
+      - "[::1]:53:53/udp"
+      - "[::1]:80:80/tcp"
+    mac_address: 00:07:ef:66:66:66
 
   pihole:
     image: pihole/pihole:latest
@@ -25,11 +29,10 @@ services:
     environment:
       TZ: 'Europe/Moscow'
       WEBPASSWORD: 'my super secret password'
-      PIHOLE_DNS_: '302:db60::53;300:6223::53;302:7991::53;301:23b4:991a:634d::53;94.16.114.254;81.169.136.222;9.9.9.11;9.9.9.9'
+      PIHOLE_DNS_: '302:db60::53;300:6223::53;302:7991::53;301:23b4:991a:634d::53;94.16.114.254;81.169.136.222'
       DNSSEC: 'true'
       VIRTUAL_HOST: '127.0.0.1'
       WEBTHEME: 'default-darker'
-        #    network_mode: host
     volumes:
       - './etc-pihole:/etc/pihole'
       - './etc-dnsmasq.d:/etc/dnsmasq.d'
