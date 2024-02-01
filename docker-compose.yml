@@ -2,7 +2,7 @@ version: "3"
 
 services:
   yggdrasil:
-    build: .
+    build: ./yggdrasil/.
     container_name: yggdrasil
     restart: unless-stopped
     cap_add:
@@ -20,16 +20,23 @@ services:
       - "[::1]:80:80/tcp"
     mac_address: 00:07:ef:66:66:66
 
+  dnscrypt:
+    build: ./dnscrypt/.
+    container_name: dnscrypt
+    restart: unless-stopped
+    network_mode: service:yggdrasil
+
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
     depends_on: 
       - yggdrasil
+      - dnscrypt
     network_mode: service:yggdrasil
     environment:
       TZ: 'Europe/Moscow'
       WEBPASSWORD: 'my super secret password'
-      PIHOLE_DNS_: '302:db60::53;300:6223::53;302:7991::53;301:23b4:991a:634d::53;94.16.114.254;81.169.136.222'
+      PIHOLE_DNS_: 'yggdrasil#55;324:71e:281a:9ed3::53;200:2892:d0f:bc20:8a8e:c7be:9d9e:ab55;300:6223::53'
       DNSSEC: 'true'
       VIRTUAL_HOST: '127.0.0.1'
       WEBTHEME: 'default-darker'
